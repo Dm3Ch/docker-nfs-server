@@ -1,1 +1,1 @@
-/exports *(rw,sync,no_subtree_check,no_root_squash) 
+/exports *(rw,async,no_subtree_check,no_root_squash) 
