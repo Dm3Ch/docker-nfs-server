@@ -1,18 +1,12 @@
-FROM ubuntu:16.04
+FROM alpine:3.5
 
-ENV DEBIAN_FRONTEND noninteractive
+RUN apk --no-cache add nfs-utils
 
-RUN apt-get update -qq  \
-    && apt-get install -y nfs-kernel-server nfs-common \
-    && rm -rf /var/lib/apt/lists/* \
-    && echo "nfs 2049/tcp" >> /etc/services
+RUN mkdir /exports 
 
-RUN mkdir /exports \
-    && echo "/exports *(rw,sync,no_subtree_check,no_root_squash)" >> /etc/exports \
-    && echo "Serving /exports" \
-    && /usr/sbin/exportfs -a
+ADD startup.sh /startup.sh
+ADD exports /etc/exports
 
 EXPOSE 111/udp 2049/tcp
 
-COPY run.sh /run.sh
-ENTRYPOINT  [ "/run.sh" ]
+ENTRYPOINT  [ "/startup.sh" ]
